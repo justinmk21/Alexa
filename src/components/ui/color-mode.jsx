@@ -1,65 +1,65 @@
 'use client'
 
 import { ClientOnly, IconButton, Skeleton, Span } from '@chakra-ui/react'
-import { ThemeProvider, useTheme } from 'next-themes'
-
+import { ThemeProvider } from 'next-themes'
 import * as React from 'react'
-import { LuMoon, LuSun } from 'react-icons/lu'
+import { LuSun } from 'react-icons/lu'
 
+/**
+ * Always Light Mode Theme Provider
+ */
 export function ColorModeProvider(props) {
   return (
-    <ThemeProvider attribute='class' disableTransitionOnChange {...props} />
+    <ThemeProvider
+      attribute='class'
+      forcedTheme='light' // 🔥 force the app to stay in light mode
+      disableTransitionOnChange
+      {...props}
+    />
   )
 }
 
+/**
+ * Fake color mode hook that always returns 'light'
+ */
 export function useColorMode() {
-  const { resolvedTheme, setTheme, forcedTheme } = useTheme()
-  const colorMode = forcedTheme || resolvedTheme
-  const toggleColorMode = () => {
-    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
-  }
   return {
-    colorMode: colorMode,
-    setColorMode: setTheme,
-    toggleColorMode,
+    colorMode: 'light',
+    setColorMode: () => {},
+    toggleColorMode: () => {},
   }
 }
 
 export function useColorModeValue(light, dark) {
-  const { colorMode } = useColorMode()
-  return colorMode === 'dark' ? dark : light
+  // Always return the light value
+  return light
 }
 
 export function ColorModeIcon() {
-  const { colorMode } = useColorMode()
-  return colorMode === 'dark' ? <LuMoon /> : <LuSun />
+  return <LuSun />
 }
 
-export const ColorModeButton = React.forwardRef(
-  function ColorModeButton(props, ref) {
-    const { toggleColorMode } = useColorMode()
-    return (
-      <ClientOnly fallback={<Skeleton boxSize='9' />}>
-        <IconButton
-          onClick={toggleColorMode}
-          variant='ghost'
-          aria-label='Toggle color mode'
-          size='sm'
-          ref={ref}
-          {...props}
-          css={{
-            _icon: {
-              width: '5',
-              height: '5',
-            },
-          }}
-        >
-          <ColorModeIcon />
-        </IconButton>
-      </ClientOnly>
-    )
-  },
-)
+/**
+ * Disabled ColorModeButton (always shows sun)
+ */
+export const ColorModeButton = React.forwardRef(function ColorModeButton(
+  props,
+  ref
+) {
+  return (
+    <ClientOnly fallback={<Skeleton boxSize='9' />}>
+      <IconButton
+        variant='ghost'
+        aria-label='Color mode locked to light'
+        size='sm'
+        ref={ref}
+        icon={<LuSun />}
+        isDisabled
+        {...props}
+      />
+    </ClientOnly>
+  )
+})
 
 export const LightMode = React.forwardRef(function LightMode(props, ref) {
   return (
@@ -76,6 +76,7 @@ export const LightMode = React.forwardRef(function LightMode(props, ref) {
 })
 
 export const DarkMode = React.forwardRef(function DarkMode(props, ref) {
+  // This mode will never be used, but we keep it for compatibility
   return (
     <Span
       color='fg'

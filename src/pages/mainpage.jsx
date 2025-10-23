@@ -38,6 +38,7 @@ import rehypeSanitize from "rehype-sanitize";
 import Options from "../components/ui/Menu";
 import remarkGFM from "remark-gfm";
 import ColorSkeleton from "../components/skeleton";
+import { ColorModeButton } from "../components/ui/color-mode";
 
 function MainPage() {
   const [openSidebar, setOpenSidebar] = useState(false);
@@ -411,6 +412,7 @@ function MainPage() {
       <article className="mode">
         <div className="theme">
           <LuSun size={32} color="#a3a3a3" />
+          
         </div>
 
         <div>
@@ -428,7 +430,7 @@ function MainPage() {
         </div>
 
         <div className="upgrade">
-          <LuSettings size={20} color="#a3a3a3" />
+          <LuSettings size={20} color="#a3a3a3" /><ColorModeButton />
         </div>
       </article>
     </section>
